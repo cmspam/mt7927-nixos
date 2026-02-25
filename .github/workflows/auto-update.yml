@@ -8,45 +8,54 @@ jobs:
   check-updates:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Needed to push directly to the repo
+      contents: write
     steps:
-      - uses: actions/checkout@v4
-      
-      - uses: cachix/install-nix-action@v25
-      
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v25
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Update Flake Inputs
         run: nix flake update
-        
-       - name: Sync Kernel Hash
+
+      - name: Sync Kernel Hash
         id: sync
         run: |
-          # 1. Force Nix to show us where the DKMS source is, even if the tree is 'dirty'
+          # 1. Get the store path of the DKMS repo source
+          # We use --impure because the git tree is "dirty" after flake update
           SOURCE_PATH=$(nix eval --impure --raw .#repo-src.outPath)
-          
-          # 2. Extract the version from the PKGBUILD inside that path
+          echo "Source path found at: $SOURCE_PATH"
+
+          # 2. Extract the target kernel version from the PKGBUILD
           VER=$(grep "_mt76_kver=" "$SOURCE_PATH/PKGBUILD" | cut -d"'" -f2)
           
           if [ -z "$VER" ]; then
             echo "Error: Could not extract version from PKGBUILD"
             exit 1
           fi
+          echo "Detected Target Kernel Version: $VER"
 
-          echo "Detected Kernel Version: $VER"
-
-          # 3. Run your update script
+          # 3. Run the update script with the detected version
           chmod +x ./update.sh
           ./update.sh "$VER"
           
-          # 4. Pass the version to the next step
-          echo "VERSION=$VER" >> $GITHUB_OUTPUT      - name: Commit and Push
+          # 4. Save the version for the commit message
+          echo "VERSION=$VER" >> $GITHUB_OUTPUT
+
+      - name: Commit and Push Changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # Add versions.json and flake.lock
+          # Stage changes
           git add versions.json flake.lock
           
-          # Only commit if there are actual changes
+          # Only commit and push if changes actually exist
           if git diff --cached --quiet; then
             echo "No changes detected, skipping push."
           else
