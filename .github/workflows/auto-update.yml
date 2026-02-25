@@ -24,6 +24,7 @@ jobs:
           VER=$(nix eval --raw .#mediatek-mt7927-dkms.outPath | xargs -I{} grep "_mt76_kver=" {}/PKGBUILD | cut -d"'" -f2)
           
           # Run your update script
+          chmod +x ./update.sh
           ./update.sh $VER
           
           # Pass the version to the next step
