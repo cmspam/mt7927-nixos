@@ -22,56 +22,40 @@
       pkgs = nixpkgs.legacyPackages.${system};
       repoSrc = mediatek-mt7927-dkms;
 
-      # Load automated version/hash data
-      # If file doesn't exist yet, we use defaults to prevent evaluation failure
+      # 1. Load automated version/hash data from the JSON bridge
       versions =
         if builtins.pathExists ./versions.json then
           builtins.fromJSON (builtins.readFile ./versions.json)
         else
           {
+            # Fallback defaults if the file is missing locally
             mt76KVer = "6.19.3";
             mt76Hash = "sha256-lEZOxC8mWC3xjQRPbd92lej36CEdHLEvHZGq5KNxG5Q=";
           };
 
-      # Parse metadata from the DKMS repo's PKGBUILD
+      # 2. Parse metadata from the DKMS repo's PKGBUILD for ASUS firmware
       pkgbuild = builtins.readFile "${repoSrc}/PKGBUILD";
-
-      mt76KVer =
-        let
-          m = builtins.match ".*_mt76_kver='([0-9]+\\.[0-9]+\\.[0-9]+)'.*" pkgbuild;
-        in
-        if m != null then builtins.head m else versions.mt76KVer;
 
       driverFilename =
         let
           m = builtins.match ".*_driver_filename='([^']+)'.*" pkgbuild;
         in
-        if m != null then
-          builtins.head m
-        else
-          "DRV_WiFi_MTK_MT7925_MT7927_TP_W11_64_V5603998_20250709R.zip";
+        if m != null then builtins.head m else "DRV_WiFi_MTK_MT7925_MT7927_TP_W11_64_V5603998_20250709R.zip";
 
       driverSha256Hex =
         let
           m = builtins.match ".*_driver_sha256='([a-f0-9]+)'.*" pkgbuild;
         in
-        if m != null then
-          builtins.head m
-        else
-          "b377fffa28208bb1671a0eb219c84c62fba4cd6f92161b74e4b0909476307cc8";
+        if m != null then builtins.head m else "b377fffa28208bb1671a0eb219c84c62fba4cd6f92161b74e4b0909476307cc8";
 
-      # Kernel source fetcher (used to build the out-of-tree modules)
-      linuxDrivers = pkgs.fetchgit {
-        url = "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git";
-        rev = "v${mt76KVer}";
-        sparseCheckout = [
-          "drivers/net/wireless/mediatek/mt76"
-          "drivers/bluetooth"
-        ];
+      # 3. Fetch Kernel source using the Tarball method to ensure hash consistency
+      # This matches the behavior of the update.sh script.
+      linuxDrivers = pkgs.fetchzip {
+        url = "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/snapshot/linux-${versions.mt76KVer}.tar.gz";
         hash = versions.mt76Hash;
       };
 
-      # Firmware source from ASUS
+      # 4. Firmware source from ASUS
       asusZip = pkgs.fetchurl {
         url = "https://dlcdnets.asus.com/pub/ASUS/mb/08WIRELESS/${driverFilename}";
         hash = "sha256:${driverSha256Hex}";
@@ -205,7 +189,7 @@
         wifi = defaultModules.wifi;
         bluetooth = defaultModules.bluetooth;
         default = defaultModules.firmware;
-        repo-src = repoSrc; 
+        repo-src = repoSrc;
       };
 
       nixosModules.default =
@@ -241,10 +225,16 @@
             boot.extraModulePackages =
               lib.optional cfg.enableWifi builtModules.wifi
               ++ lib.optional cfg.enableBluetooth builtModules.bluetooth;
-            
+
             boot.kernelModules =
-              lib.optionals cfg.enableWifi [ "mt7925e" "mt7921e" ]
-              ++ lib.optionals cfg.enableBluetooth [ "btmtk" "btusb" ];
+              lib.optionals cfg.enableWifi [
+                "mt7925e"
+                "mt7921e"
+              ]
+              ++ lib.optionals cfg.enableBluetooth [
+                "btmtk"
+                "btusb"
+              ];
 
             services.udev.extraRules = lib.mkIf cfg.disableAspm ''
               ACTION=="add", SUBSYSTEM=="pci", \
