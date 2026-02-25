@@ -1,0 +1,46 @@
+name: Auto Update
+on:
+  schedule:
+    - cron: '0 0 * * *' # Every day at midnight
+  workflow_dispatch:
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to push directly to the repo
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: cachix/install-nix-action@v25
+      
+      - name: Update Flake Inputs
+        run: nix flake update
+        
+      - name: Sync Kernel Hash
+        id: sync
+        run: |
+          # Get the version from the fetched DKMS source
+          VER=$(nix eval --raw .#mediatek-mt7927-dkms.outPath | xargs -I{} grep "_mt76_kver=" {}/PKGBUILD | cut -d"'" -f2)
+          
+          # Run your update script
+          ./update.sh $VER
+          
+          # Pass the version to the next step
+          echo "VERSION=$VER" >> $GITHUB_OUTPUT
+          
+      - name: Commit and Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Add versions.json and flake.lock
+          git add versions.json flake.lock
+          
+          # Only commit if there are actual changes
+          if git diff --cached --quiet; then
+            echo "No changes detected, skipping push."
+          else
+            git commit -m "chore: auto-update to v${{ steps.sync.outputs.VERSION }}"
+            git push
+          fi
