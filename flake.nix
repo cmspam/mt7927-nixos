@@ -205,6 +205,7 @@
         wifi = defaultModules.wifi;
         bluetooth = defaultModules.bluetooth;
         default = defaultModules.firmware;
+        repo-src = repoSrc; 
       };
 
       nixosModules.default =
