@@ -47,11 +47,6 @@ Activate the module and its features:
 }
 ```
 
-## How it works
-This flake pulls specific sub-directories from the [Linux stable kernel tree](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git) using a sparse checkout. It then applies the patches maintained by the [mediatek-mt7927-dkms](https://github.com/jetm/mediatek-mt7927-dkms) project. 
-
-Because NixOS handles kernel modules differently than standard DKMS, this flake compiles the modules against your specific `boot.kernelPackages.kernel` version automatically, ensuring the driver is always compatible with your running kernel.
-
 ## Troubleshooting
 
 ### Verify Module Loading
