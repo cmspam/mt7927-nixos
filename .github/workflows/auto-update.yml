@@ -1,7 +1,7 @@
 name: Auto Update
 on:
   schedule:
-    - cron: '0 0 * * *' # Every day at midnight
+    - cron: '0 * * * *' # Every hour
   workflow_dispatch:
 
 jobs:
@@ -23,39 +23,45 @@ jobs:
       - name: Update Flake Inputs
         run: nix flake update
 
+      - name: Check for flake.lock changes
+        id: check
+        run: |
+          if git diff --quiet flake.lock; then
+            echo "No changes in flake.lock, skipping."
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "flake.lock changed, proceeding with update."
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Sync Kernel Hash
         id: sync
+        if: steps.check.outputs.changed == 'true'
         run: |
-          # 1. Get the store path of the DKMS repo source
-          # We use --impure because the git tree is "dirty" after flake update
           SOURCE_PATH=$(nix eval --impure --raw .#repo-src.outPath)
           echo "Source path found at: $SOURCE_PATH"
 
-          # 2. Extract the target kernel version from the PKGBUILD
           VER=$(grep "_mt76_kver=" "$SOURCE_PATH/PKGBUILD" | cut -d"'" -f2)
-          
+
           if [ -z "$VER" ]; then
             echo "Error: Could not extract version from PKGBUILD"
             exit 1
           fi
           echo "Detected Target Kernel Version: $VER"
 
-          # 3. Run the update script with the detected version
           chmod +x ./update.sh
           ./update.sh "$VER"
-          
-          # 4. Save the version for the commit message
+
           echo "VERSION=$VER" >> $GITHUB_OUTPUT
 
       - name: Commit and Push Changes
+        if: steps.check.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          # Stage changes
+
           git add versions.json flake.lock
-          
-          # Only commit and push if changes actually exist
+
           if git diff --cached --quiet; then
             echo "No changes detected, skipping push."
           else
