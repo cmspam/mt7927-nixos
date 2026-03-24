@@ -6,7 +6,7 @@
 
     # Upstream source for patches and firmware extraction scripts
     mediatek-mt7927-dkms = {
-      url = "github:jetm/mediatek-mt7927-dkms";
+      url = "github:jetm/mediatek-mt7927-dkms?ref=v2.7-1";
       flake = false;
     };
   };
@@ -73,7 +73,7 @@
         rec {
           firmware = kernel.stdenv.mkDerivation {
             pname = "mediatek-mt7927-firmware";
-            version = "2.1";
+            version = "2.7-1";
             dontUnpack = true;
             nativeBuildInputs = [
               pkgs.libarchive
@@ -103,7 +103,7 @@
 
           wifi = kernel.stdenv.mkDerivation {
             pname = "mediatek-mt7927-wifi";
-            version = "2.1";
+            version = "2.7-1";
             src = "${linuxDrivers}/drivers/net/wireless/mediatek/mt76";
             nativeBuildInputs = kernel.moduleBuildDependencies ++ [
               pkgs.python3
@@ -112,8 +112,19 @@
             ];
             patches = [
               "${repoSrc}/mt7902-wifi-6.19.patch"
-              "${repoSrc}/mt6639-wifi-init.patch"
-              "${repoSrc}/mt6639-wifi-dma.patch"
+              "${repoSrc}/mt7927-wifi-01-fix-stale-pointer-comparisons-in-changev.patch"
+              "${repoSrc}/mt7927-wifi-02-add-320mhz-bandwidth-to-bssrlmtlv.patch"
+              "${repoSrc}/mt7927-wifi-03-handle-320mhz-bandwidth-in-rxv-and-txs.patch"
+              "${repoSrc}/mt7927-wifi-04-populate-eht-320mhz-mcs-map-in-starec.patch"
+              "${repoSrc}/mt7927-wifi-05-advertise-eht-320mhz-capabilities-for-6g.patch"
+              "${repoSrc}/mt7927-wifi-06-add-mt7927-chip-id-helpers.patch"
+              "${repoSrc}/mt7927-wifi-07-add-mt7927-firmware-paths.patch"
+              "${repoSrc}/mt7927-wifi-08-use-irqmap-for-chip-specific-interrupt-h.patch"
+              "${repoSrc}/mt7927-wifi-09-add-chip-specific-dma-configuration.patch"
+              "${repoSrc}/mt7927-wifi-10-add-mt7927-hardware-initialization.patch"
+              "${repoSrc}/mt7927-wifi-11-fix-bandidx-for-stable-5ghz6ghz-operatio.patch"
+              "${repoSrc}/mt7927-wifi-12-enable-low-power-support-for-mt7927.patch"
+              "${repoSrc}/mt7927-wifi-13-enable-mt7927-pci-device-ids.patch"
             ];
             buildPhase = ''
               runHook preBuild
