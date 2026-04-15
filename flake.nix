@@ -20,7 +20,6 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      lib = pkgs.lib;
       repoSrc = mediatek-mt7927-dkms;
 
       # 1. Load automated version/hash data from the JSON bridge
@@ -48,26 +47,11 @@
         in
         if m != null then builtins.head m else "b377fffa28208bb1671a0eb219c84c62fba4cd6f92161b74e4b0909476307cc8";
 
-      # 3. Dynamically discover patch files from the upstream repo.
-      #    This mirrors the Makefile's glob-based approach so that when
-      #    upstream adds/removes/renames patches, a `nix flake update` is
-      #    all that's needed — no manual flake.nix edits required.
-      repoFiles = builtins.attrNames (builtins.readDir repoSrc);
-
-      # WiFi patches: mt7902-wifi-6.19.patch + mt7927-wifi-*.patch (numbered + compat)
-      wifiPatches =
-        let
-          mt7902 = builtins.filter (n: lib.hasPrefix "mt7902-wifi-" n && lib.hasSuffix ".patch" n) repoFiles;
-          mt7927 = builtins.filter (n: lib.hasPrefix "mt7927-wifi-" n && lib.hasSuffix ".patch" n) repoFiles;
-        in
-        map (n: "${repoSrc}/${n}") (builtins.sort builtins.lessThan (mt7902 ++ mt7927));
-
-      # Bluetooth patches: mt6639-bt-*.patch (numbered + compat)
-      btPatches =
-        let
-          names = builtins.filter (n: lib.hasPrefix "mt6639-bt-" n && lib.hasSuffix ".patch" n) repoFiles;
-        in
-        map (n: "${repoSrc}/${n}") (builtins.sort builtins.lessThan names);
+      # 3. Patch lists — read from versions.json, populated by the
+      #    auto-update workflow which resolves them from the upstream
+      #    Makefile's glob patterns in the correct application order.
+      wifiPatches = map (n: "${repoSrc}/${n}") (versions.wifiPatches or [ ]);
+      btPatches = map (n: "${repoSrc}/${n}") (versions.btPatches or [ ]);
 
       # 4. Fetch kernel source
       linuxDrivers = pkgs.fetchzip {

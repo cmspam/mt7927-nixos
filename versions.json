@@ -1,1 +1,38 @@
-{"mt76KVer": "7.0", "mt76Hash": "sha256-7TjYHhJdD67P3lquusrjjVtUIUzhLPtA5Oy7tc82gYA="}
+{
+  "mt76KVer": "7.0",
+  "mt76Hash": "sha256-7TjYHhJdD67P3lquusrjjVtUIUzhLPtA5Oy7tc82gYA=",
+  "wifiPatches": [
+    "mt7902-wifi-6.19.patch",
+    "mt7927-wifi-01-fix-stale-pointer-comparisons-in-changev.patch",
+    "mt7927-wifi-02-add-320mhz-bandwidth-to-bssrlmtlv.patch",
+    "mt7927-wifi-03-handle-320mhz-bandwidth-in-rxv-and-txs.patch",
+    "mt7927-wifi-04-populate-eht-320mhz-mcs-map-in-starec.patch",
+    "mt7927-wifi-05-advertise-eht-320mhz-capabilities-for-6g.patch",
+    "mt7927-wifi-06-add-mt7927-chip-id-helpers.patch",
+    "mt7927-wifi-07-add-mt7927-firmware-paths.patch",
+    "mt7927-wifi-08-use-irqmap-for-chip-specific-interrupt-h.patch",
+    "mt7927-wifi-09-add-chip-specific-dma-configuration.patch",
+    "mt7927-wifi-10-add-mt7927-hardware-initialization.patch",
+    "mt7927-wifi-11-fix-bandidx-for-stable-5ghz6ghz-operatio.patch",
+    "mt7927-wifi-12-disable-aspm-and-runtime-pm-for-mt7927.patch",
+    "mt7927-wifi-13-enable-mt7927-pci-device-ids.patch",
+    "mt7927-wifi-14-fix-reported-txpower-always-showing-3-db.patch",
+    "mt7927-wifi-15-add-missing-he-ap-phy-capabilities.patch",
+    "mt7927-wifi-16-add-starecmuru-tlv-for-ap-mode.patch",
+    "mt7927-wifi-17-add-starectxproc-tlv.patch",
+    "mt7927-wifi-18-fix-tx-power-reporting-in-ap-mode.patch",
+    "mt7927-wifi-19-route-ba-command-to-wa-processor-for-am.patch",
+    "mt7927-wifi-compat-kzalloc_flex-for-pre-7.0-kernels.patch"
+  ],
+  "btPatches": [
+    "mt6639-bt-01-add-mt6639-mt7927-bluetooth-support.patch",
+    "mt6639-bt-02-fix-iso-interface-setup-for-single-alt-s.patch",
+    "mt6639-bt-03-add-mt7927-id-for-asus-rog-crosshair-x87.patch",
+    "mt6639-bt-04-add-mt7927-id-for-lenovo-legion-pro-7-16.patch",
+    "mt6639-bt-05-add-mt7927-id-for-gigabyte-z790-aorus-ma.patch",
+    "mt6639-bt-06-add-mt7927-id-for-msi-x870e-ace-max.patch",
+    "mt6639-bt-07-add-mt7927-id-for-tp-link-archer-tbe550e.patch",
+    "mt6639-bt-08-add-mt7927-id-for-asus-x870e--proart-x87.patch",
+    "mt6639-bt-compat-kmalloc_obj-for-pre-7.0-kernels.patch"
+  ]
+}
