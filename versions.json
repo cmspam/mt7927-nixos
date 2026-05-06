@@ -21,7 +21,7 @@
     "mt7927-wifi-16-add-starecmuru-tlv-for-ap-mode.patch",
     "mt7927-wifi-17-add-starectxproc-tlv.patch",
     "mt7927-wifi-18-fix-tx-power-reporting-in-ap-mode.patch",
-    "mt7927-wifi-19-route-ba-command-to-wa-processor-for-am.patch",
+    "mt7927-wifi-19-add-sta-fallback-recovery-in-tx-free-pat.patch",
     "mt7927-wifi-compat-kzalloc_flex-for-pre-7.0-kernels.patch"
   ],
   "btPatches": [
