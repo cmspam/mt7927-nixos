@@ -33,6 +33,7 @@
     "mt6639-bt-06-add-mt7927-id-for-msi-x870e-ace-max.patch",
     "mt6639-bt-07-add-mt7927-id-for-tp-link-archer-tbe550e.patch",
     "mt6639-bt-08-add-mt7927-id-for-asus-x870e--proart-x87.patch",
+    "mt6639-bt-09-add-mt7902-bluetooth-support.patch",
     "mt6639-bt-compat-kmalloc_obj-for-pre-7.0-kernels.patch"
   ]
 }
