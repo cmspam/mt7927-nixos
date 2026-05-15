@@ -94,7 +94,7 @@
             installPhase = ''
               runHook preInstall
               install -Dm644 firmware/BT_RAM_CODE_MT6639_2_1_hdr.bin \
-                "$out/lib/firmware/mediatek/mt6639/BT_RAM_CODE_MT6639_2_1_hdr.bin"
+                "$out/lib/firmware/mediatek/mt7927/BT_RAM_CODE_MT6639_2_1_hdr.bin"
               install -Dm644 firmware/WIFI_MT6639_PATCH_MCU_2_1_hdr.bin \
                 "$out/lib/firmware/mediatek/mt7927/WIFI_MT6639_PATCH_MCU_2_1_hdr.bin"
               install -Dm644 firmware/WIFI_RAM_CODE_MT6639_2_1.bin \
