@@ -21,6 +21,7 @@
     "mt7927-wifi-17-add-starectxproc-tlv.patch",
     "mt7927-wifi-18-fix-tx-power-reporting-in-ap-mode.patch",
     "mt7927-wifi-19-add-sta-fallback-recovery-in-tx-free-pat.patch",
+    "mt7927-wifi-20-track-valid-bss-tx-power-before-reportin.patch",
     "mt7927-wifi-compat-action-frame-for-pre-7.1-kernels.patch",
     "mt7927-wifi-compat-kzalloc_flex-for-pre-7.0-kernels.patch"
   ],
