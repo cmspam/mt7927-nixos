@@ -15,6 +15,12 @@
   "btPatches": [
     "mt6639-bt-01-add-hp-elitemini-e156-id.patch",
     "mt6639-bt-02-no-reset-when-firmware-absent.patch",
-    "mt6639-bt-compat-for-pre-7.0-kernels.patch"
+    "mt6639-bt-compat-for-pre-7.0-kernels.patch",
+    "mt6639-bt-compat-linux-6.8.patch",
+    "mt6639-bt-compat-payload-bounds.patch",
+    "mt6639-bt-compat-usb-pm.patch",
+    "mt6639-bt-compat-wmt-pm.patch",
+    "mt6639-bt-compat-zz-diagnostics.patch",
+    "mt6639-bt-compat-zzz-local-version.patch"
   ]
 }
