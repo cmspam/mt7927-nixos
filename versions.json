@@ -1,21 +1,22 @@
 {
-  "mt76KVer": "7.2",
-  "mt76Hash": "sha256-GAjLGXXJiU42En31XWWx31IRT63G2pNsDN4ifNGtHis=",
+  "mt76KVer": "7.3",
+  "mt76Hash": "sha256-ca8CMAWKe1yzkQIn8sasUQxMLqdtfvC+wBFtX3819Zk=",
   "wifiPatches": [
     "mt7927-wifi-01-add-missing-he-ap-phy-capabilities.patch",
     "mt7927-wifi-02-add-starecmuru-tlv-for-ap-mode.patch",
     "mt7927-wifi-03-add-starectxproc-tlv.patch",
     "mt7927-wifi-04-add-sta-fallback-recovery-in-tx-free-pat.patch",
-    "mt7927-wifi-backport-01-cancel-pending-mlo-pm-work.patch",
-    "mt7927-wifi-backport-02-cancel-mlo-pm-work-on-stop.patch",
     "mt7927-wifi-compat-action-frame-for-pre-7.1-kernels.patch",
     "mt7927-wifi-compat-eml-cap-macros-for-pre-7.2-kernels.patch",
-    "mt7927-wifi-compat-kzalloc_flex-for-pre-7.0-kernels.patch"
+    "mt7927-wifi-compat-kzalloc_flex-for-pre-7.0-kernels.patch",
+    "mt7927-wifi-compat-nan-for-pre-7.1-kernels.patch",
+    "mt7927-wifi-compat-regd-obj-aql-for-pre-7.2-kernels.patch"
   ],
   "btPatches": [
     "mt6639-bt-01-add-hp-elitemini-e156-id.patch",
     "mt6639-bt-02-no-reset-when-firmware-absent.patch",
     "mt6639-bt-compat-for-pre-7.0-kernels.patch",
+    "mt6639-bt-compat-for-pre-7.3-kernels.patch",
     "mt6639-bt-compat-linux-6.8.patch",
     "mt6639-bt-compat-payload-bounds.patch",
     "mt6639-bt-compat-usb-pm.patch",
