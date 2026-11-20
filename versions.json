@@ -1,11 +1,13 @@
 {
-  "mt76KVer": "7.3",
-  "mt76Hash": "sha256-ca8CMAWKe1yzkQIn8sasUQxMLqdtfvC+wBFtX3819Zk=",
+  "mt76KVer": "7.3.5",
+  "mt76Hash": "sha256-/XS8p4fXB4ZDtBwUA9Rm4rk5LdX2p8pWATQgejhQvlk=",
   "wifiPatches": [
     "mt7927-wifi-01-add-missing-he-ap-phy-capabilities.patch",
     "mt7927-wifi-02-add-starecmuru-tlv-for-ap-mode.patch",
     "mt7927-wifi-03-add-starectxproc-tlv.patch",
     "mt7927-wifi-04-add-sta-fallback-recovery-in-tx-free-pat.patch",
+    "mt7927-wifi-backport-01-mt7921-keep-join-roc-until-authorized.patch",
+    "mt7927-wifi-backport-02-mt7925-keep-join-roc-until-authorized.patch",
     "mt7927-wifi-compat-action-frame-for-pre-7.1-kernels.patch",
     "mt7927-wifi-compat-eml-cap-macros-for-pre-7.2-kernels.patch",
     "mt7927-wifi-compat-kzalloc_flex-for-pre-7.0-kernels.patch",
